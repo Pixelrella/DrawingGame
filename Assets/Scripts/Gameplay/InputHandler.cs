@@ -7,7 +7,7 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        if(Mouse.current.leftButton.wasReleasedThisFrame)
+        if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
             CheckForPixelHit();
         }
@@ -21,10 +21,11 @@ public class InputHandler : MonoBehaviour
     private void CheckForPixelHit()
     {
         var point = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        var hit = Physics2D.Raycast(point, Vector2.zero);
+        var hit = Physics2D.Raycast(point, Vector2.zero, Mathf.Infinity, layerMask: LayerMask.GetMask("Pixel"));
 
         if (hit)
         {
+            Debug.Log($"Hit {hit.collider.name}");
             var changeColor = hit.collider.GetComponent<Pixel>();
             changeColor.ChangeColor(_nextColor);
         }

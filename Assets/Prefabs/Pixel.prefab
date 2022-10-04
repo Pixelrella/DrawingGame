@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 6946675509883963925}
   - component: {fileID: 6946675509883963927}
   - component: {fileID: 6946675509883964136}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Pixel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
