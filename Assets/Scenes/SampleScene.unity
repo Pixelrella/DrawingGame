@@ -214,7 +214,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inputHandler: {fileID: 1449599392}
-  _colorPalette: {fileID: 11400000, guid: 48bc47e497405764089e10f93815dbc4, type: 2}
+  _colorPalette:
+  - {fileID: 11400000, guid: 48bc47e497405764089e10f93815dbc4, type: 2}
+  - {fileID: 11400000, guid: afd02409f5f97b44d8457c71647dae0a, type: 2}
   _colorButtonPrefab: {fileID: 7673731549398415193, guid: 40a9d642dc025be4ca40adb4ece32e8e, type: 3}
 --- !u!114 &414997208
 MonoBehaviour:

@@ -4,14 +4,16 @@ using UnityEngine;
 public class ColorPicker : MonoBehaviour
 {
     [SerializeField] private InputHandler _inputHandler;
-    [SerializeField] private ColorPaletteScriptableObject _colorPalette;
+    [SerializeField] private List<ColorPaletteScriptableObject> _colorPalette;
     [SerializeField] private ColorButton _colorButtonPrefab;
 
     private List<ColorButton> selectableButtons = new List<ColorButton>();
 
     private void Awake()
     {
-        foreach (var color in _colorPalette.Colors)
+        var palette = _colorPalette[Random.Range(0, _colorPalette.Count)];
+
+        foreach (var color in palette.Colors)
         {
             var button = Instantiate<ColorButton>(_colorButtonPrefab, transform);
             button.Init(PickColor, color);
