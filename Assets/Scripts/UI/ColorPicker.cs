@@ -4,24 +4,32 @@ using UnityEngine;
 public class ColorPicker : MonoBehaviour
 {
     [SerializeField] private InputHandler _inputHandler;
+    [SerializeField] private ColorPaletteScriptableObject _colorPalette;
+    [SerializeField] private ColorButton _colorButtonPrefab;
 
     private List<ColorButton> selectableButtons = new List<ColorButton>();
 
     private void Awake()
     {
-        var buttons = GetComponentsInChildren<ColorButton>();
-        foreach (var button in buttons)
+        foreach (var color in _colorPalette.Colors)
         {
-            button.Init(PickColor);
+            var button = Instantiate<ColorButton>(_colorButtonPrefab, transform);
+            button.Init(PickColor, color);
             selectableButtons.Add(button);
         }
+
+        PickColor(selectableButtons[0]);
     }
 
     public void PickColor(ColorButton button)
     {
         _inputHandler.SetNextColor(button.Color);
+        SelectButton(button);
+    }
 
-        foreach(var selectableButton in selectableButtons)
+    private void SelectButton(ColorButton button)
+    {
+        foreach (var selectableButton in selectableButtons)
         {
             selectableButton.SetSelected(selectableButton == button);
         }

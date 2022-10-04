@@ -13,11 +13,13 @@ public class ColorButton : MonoBehaviour
 
     public Color Color => _imageWithColor.color;
 
-    public void Init(Action<ColorButton> colorChangeCallback)
+    public void Init(Action<ColorButton> colorChangeCallback, Color color)
     {
         _button = GetComponent<Button>();
         _button.onClick.AddListener(Select);
         _colorChangeCallback = colorChangeCallback;
+
+        _imageWithColor.color = color;
 
         SetSelected(false);
     }
