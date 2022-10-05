@@ -11,6 +11,18 @@ public class ColorPicker : MonoBehaviour
 
     private void Awake()
     {
+        SpawnColors();
+    }
+
+    public void SpawnColors()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
+
+        selectableButtons.Clear();
+
         var palette = _colorPalette[Random.Range(0, _colorPalette.Count)];
 
         foreach (var color in palette.Colors)

@@ -8,6 +8,16 @@ public class PixelGenerator : MonoBehaviour
 
     private void Start()
     {
+        Spawn();
+    }
+
+    public void Spawn()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
+
         for (int i = 0; i < 100; i++)
         {
             SpawnPixelAtRandom();
@@ -19,6 +29,8 @@ public class PixelGenerator : MonoBehaviour
         var randomX = Random.Range(_bounds.bounds.min.x, _bounds.bounds.max.x);
         var randomY = Random.Range(_bounds.bounds.min.y, _bounds.bounds.max.y);
 
+        //TODO: do not spawn where other pixel is
+
         SpawnPixelAt(new Vector3(randomX, randomY));
     }
 
@@ -27,12 +39,13 @@ public class PixelGenerator : MonoBehaviour
         Vector3Int cellPosition = _grid.WorldToCell(position);
         position = _grid.CellToWorld(cellPosition);
 
-        Instantiate(_pixelPrefab, position, Quaternion.identity, transform);
+        var pixel = Instantiate(_pixelPrefab, position, Quaternion.identity, transform);
+        pixel.name = $"Pixel{cellPosition}";
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawCube(_bounds.bounds.center, _bounds.bounds.size);
+        Gizmos.DrawWireCube(_bounds.bounds.center, _bounds.bounds.size);
     }
 }
