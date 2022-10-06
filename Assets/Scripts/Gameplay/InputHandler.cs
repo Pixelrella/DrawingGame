@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
 
 public class InputHandler : MonoBehaviour
 {
@@ -9,19 +10,7 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            _checkForPixelHit = true;
-            return;
-        }
-
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
-        {
-            _checkForPixelHit = false;
-            return;
-        }
-
-        if (_checkForPixelHit)
+        if (Touchscreen.current.primaryTouch.isInProgress)
         {
             CheckForPixelHit();
         }
@@ -34,7 +23,7 @@ public class InputHandler : MonoBehaviour
 
     private void CheckForPixelHit()
     {
-        var point = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        var point = Camera.main.ScreenToWorldPoint(Touchscreen.current.position.ReadValue());
         var hit = Physics2D.Raycast(point, Vector2.zero, Mathf.Infinity, layerMask: LayerMask.GetMask("Pixel"));
 
         if (hit)
