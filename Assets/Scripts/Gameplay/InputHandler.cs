@@ -5,9 +5,23 @@ public class InputHandler : MonoBehaviour
 {
     [SerializeField] private Color _nextColor;
 
+    private bool _checkForPixelHit;
+
     private void Update()
     {
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            _checkForPixelHit = true;
+            return;
+        }
+
         if (Mouse.current.leftButton.wasReleasedThisFrame)
+        {
+            _checkForPixelHit = false;
+            return;
+        }
+
+        if (_checkForPixelHit)
         {
             CheckForPixelHit();
         }
@@ -25,7 +39,6 @@ public class InputHandler : MonoBehaviour
 
         if (hit)
         {
-            Debug.Log($"Hit {hit.collider.name}");
             var changeColor = hit.collider.GetComponent<Pixel>();
             changeColor.ChangeColor(_nextColor);
         }
