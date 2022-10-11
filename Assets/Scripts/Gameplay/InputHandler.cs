@@ -8,6 +8,11 @@ public class InputHandler : MonoBehaviour
 
     private bool _checkForPixelHit;
 
+    private void Awake()
+    {
+        TouchSimulation.Enable();
+    }
+
     private void Update()
     {
         if (Touchscreen.current.primaryTouch.isInProgress)
