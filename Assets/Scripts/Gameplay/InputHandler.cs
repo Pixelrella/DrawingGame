@@ -44,6 +44,7 @@ public class InputHandler : MonoBehaviour
 
         _pixelForUndo.Undo();
         UpdateUndoAvailable(null);
+        _ignorePixelHit = null;
     }
 
     private void UpdateUndoAvailable(Pixel pixel)
