@@ -29,10 +29,21 @@ public class PixelGenerator : MonoBehaviour
         {
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"left: {leftMaxPos} right: {rightMaxPos}");
-            stringBuilder.AppendLine($"up: {upMaxPos} down: {downMaxPos}");
+            stringBuilder.Append($"left: {leftMaxPos} right: {rightMaxPos}");
+            stringBuilder.Append(" | ");
+            stringBuilder.Append($"up: {upMaxPos} down: {downMaxPos}");
+            stringBuilder.Append(" | ");
+            stringBuilder.Append($"size: {GetNumGridCells()}");
 
             return stringBuilder.ToString();
+        }
+
+        public int GetNumGridCells()
+        {
+            var sizeHorizonal = Mathf.FloorToInt(Mathf.Abs(leftMaxPos - rightMaxPos)) + 1;
+            var sizeVertical = Mathf.FloorToInt(MathF.Abs(upMaxPos - downMaxPos)) + 1;
+
+            return sizeHorizonal * sizeVertical;
         }
     }
 
@@ -44,7 +55,6 @@ public class PixelGenerator : MonoBehaviour
     [SerializeField] private float _cellSize = .5f;
 
     private List<Vector3Int> occupiedCells = new List<Vector3Int>();
-    private Vector2Int _numCells;
 
     public float CellSize => _cellSize;
     public int Number => _numPixels;
@@ -68,13 +78,16 @@ public class PixelGenerator : MonoBehaviour
 
     private GridBounds CalculateGridBounds()
     {
+        // num upper: 480 @ 0.5
 
+        var numCellsFloat = _bounds.bounds.size / _cellSize;
+        var numCells = new Vector2Int(Mathf.FloorToInt(numCellsFloat.x), Mathf.FloorToInt(numCellsFloat.y));
 
-        var cellMaxPosHorizontalX = Mathf.FloorToInt(_numCells.x / 2);
-        var cellMaxVertical = Mathf.RoundToInt(_numCells.y / 2);
+        var cellMaxPosHorizontalX = Mathf.FloorToInt(numCells.x / 2);
+        var cellMaxVertical = Mathf.RoundToInt(numCells.y / 2);
 
         var rightHorizontalShift = 1;
-        var leftHorizontalShift = _numCells.x % 2 == 0 ? 0 : 1;
+        var leftHorizontalShift = numCells.x % 2 == 0 ? 0 : 1;
         if (_grid.cellSize.x <= Mathf.Abs(_bounds.offset.x))
         {
             var shift = Mathf.FloorToInt(Mathf.Abs(_bounds.offset.x) / _grid.cellSize.x);
@@ -88,6 +101,9 @@ public class PixelGenerator : MonoBehaviour
         var downMaxPos = -cellMaxVertical;
 
         var gridBounds = new GridBounds(leftMaxPos, rightMaxPos, upMaxPos, downMaxPos);
+
+        _numPixels = Mathf.Min(_numPixels, gridBounds.GetNumGridCells());
+        //TODO: Feed back to UI
         return gridBounds;
     }
 
@@ -100,11 +116,6 @@ public class PixelGenerator : MonoBehaviour
         occupiedCells.Clear();
 
         _grid.cellSize = new Vector3(_cellSize, _cellSize, 1);
-
-        var numCells = _bounds.bounds.size / _cellSize;
-        _numCells = new Vector2Int(Mathf.FloorToInt(numCells.x), Mathf.FloorToInt(numCells.y));
-
-        _numPixels = Mathf.Min(_numPixels, _numCells.x * _numCells.y);
     }
 
     private Vector3Int GetUniqueRandomCellPosition(GridBounds gridBounds)
