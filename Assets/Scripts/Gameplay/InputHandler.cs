@@ -5,6 +5,7 @@ using UnityEngine.InputSystem.EnhancedTouch;
 public class InputHandler : MonoBehaviour
 {
     [SerializeField] private Color _nextColor;
+    [SerializeField] private Round _round;
 
     public delegate void InputAction(bool flag);
     public static InputAction UndoAvailable;
@@ -13,9 +14,13 @@ public class InputHandler : MonoBehaviour
     private Pixel _pixelForUndo;
     private Pixel _ignorePixelHit;
 
+    private bool _isInputEnabled;
+
     private void Awake()
     {
         TouchSimulation.Enable();
+        _round.RoundEnd += DisableInput;
+        _round.RoundStart += EnableInput;
     }
 
     private void Start()
@@ -23,8 +28,23 @@ public class InputHandler : MonoBehaviour
         UndoAvailable?.Invoke(false);
     }
 
+    private void DisableInput()
+    {
+        _isInputEnabled = false;
+    }
+
+    private void EnableInput()
+    {
+        _isInputEnabled = true;
+    }
+
     private void Update()
     {
+        if (!_isInputEnabled)
+        {
+            return;
+        }
+
         if (Touchscreen.current.primaryTouch.isInProgress)
         {
             CheckForPixelHit();
@@ -67,9 +87,15 @@ public class InputHandler : MonoBehaviour
             return;
 
         pixel.ChangeColor(_nextColor);
+        _round.TryAddColoredCell(pixel);
 
         _ignorePixelHit = pixel;
         UpdateUndoAvailable(pixel);
     }
 
+    private void OnDestroy()
+    {
+        _round.RoundEnd -= DisableInput;
+        _round.RoundStart -= EnableInput;
+    }
 }

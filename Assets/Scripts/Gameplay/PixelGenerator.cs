@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -53,8 +52,7 @@ public class PixelGenerator : MonoBehaviour
 
     [SerializeField] private int _numPixels = 100;
     [SerializeField] private float _cellSize = .5f;
-
-    private List<Vector3Int> occupiedCells = new List<Vector3Int>();
+    [SerializeField] private Round _round;
 
     public float CellSize => _cellSize;
     public int Number => _numPixels;
@@ -74,6 +72,8 @@ public class PixelGenerator : MonoBehaviour
         {
             SpawnPixelInCell(GetUniqueRandomCellPosition(gridBounds));
         }
+
+        _round.RoundStart();
     }
 
     private GridBounds CalculateGridBounds()
@@ -113,7 +113,7 @@ public class PixelGenerator : MonoBehaviour
         {
             Destroy(transform.GetChild(i).gameObject);
         }
-        occupiedCells.Clear();
+        _round.Reset();
 
         _grid.cellSize = new Vector3(_cellSize, _cellSize, 1);
     }
@@ -125,14 +125,14 @@ public class PixelGenerator : MonoBehaviour
 
         var cellPosition = new Vector3Int(randomX, randomY);
 
-        var isOccupied = occupiedCells.Contains(cellPosition);
+        var isOccupied = _round.IsOccupied(cellPosition);
 
         if (isOccupied)
         {
             return GetUniqueRandomCellPosition(gridBounds);
         }
 
-        occupiedCells.Add(cellPosition);
+        _round.Add(cellPosition);
         return cellPosition;
     }
 
