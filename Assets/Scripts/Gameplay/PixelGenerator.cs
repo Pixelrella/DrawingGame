@@ -57,30 +57,21 @@ public class PixelGenerator : MonoBehaviour
     public float CellSize => _cellSize;
     public int Number => _numPixels;
 
-    private void Start()
-    {
-        Spawn();
-    }
-
-    public void Spawn()
+    private void Spawn()
     {
         Reset();
 
-        GridBounds gridBounds = CalculateGridBounds();
+        GridBounds gridBounds = CalculateGridBounds(_cellSize);
 
         for (int i = 0; i < _numPixels; i++)
         {
             SpawnPixelInCell(GetUniqueRandomCellPosition(gridBounds));
         }
-
-        _round.RoundStart();
     }
 
-    private GridBounds CalculateGridBounds()
+    private GridBounds CalculateGridBounds(float cellSize)
     {
-        // num upper: 480 @ 0.5
-
-        var numCellsFloat = _bounds.bounds.size / _cellSize;
+        var numCellsFloat = _bounds.bounds.size / cellSize;
         var numCells = new Vector2Int(Mathf.FloorToInt(numCellsFloat.x), Mathf.FloorToInt(numCellsFloat.y));
 
         var cellMaxPosHorizontalX = Mathf.FloorToInt(numCells.x / 2);
@@ -88,9 +79,9 @@ public class PixelGenerator : MonoBehaviour
 
         var rightHorizontalShift = 1;
         var leftHorizontalShift = numCells.x % 2 == 0 ? 0 : 1;
-        if (_grid.cellSize.x <= Mathf.Abs(_bounds.offset.x))
+        if (cellSize <= Mathf.Abs(_bounds.offset.x))
         {
-            var shift = Mathf.FloorToInt(Mathf.Abs(_bounds.offset.x) / _grid.cellSize.x);
+            var shift = Mathf.FloorToInt(Mathf.Abs(_bounds.offset.x) / cellSize);
             rightHorizontalShift += shift;
             leftHorizontalShift += shift;
         }
@@ -101,9 +92,6 @@ public class PixelGenerator : MonoBehaviour
         var downMaxPos = -cellMaxVertical;
 
         var gridBounds = new GridBounds(leftMaxPos, rightMaxPos, upMaxPos, downMaxPos);
-
-        _numPixels = Mathf.Min(_numPixels, gridBounds.GetNumGridCells());
-        //TODO: Feed back to UI
         return gridBounds;
     }
 
@@ -146,22 +134,17 @@ public class PixelGenerator : MonoBehaviour
         pixel.name = $"Pixel{cellPosition}";
     }
 
-    public void ChangeNumber(string newNumberText)
+    public int GetNumberOfPixels(float cellSize)
     {
-        if (Int32.TryParse(newNumberText, out int newNumber))
-        {
-            _numPixels = newNumber;
-        }
+        GridBounds gridBounds = CalculateGridBounds(cellSize);
+        return gridBounds.GetNumGridCells();
     }
 
-    public void ChangeCellSize(string newCellSizeText)
+    public void Generate((float, int) parameters)
     {
-        if (float.TryParse(newCellSizeText, out float newCellSize))
-        {
-            newCellSize = Mathf.Max(newCellSize, .1f);
-            newCellSize = Mathf.Min(newCellSize, 3f);
+        _cellSize = parameters.Item1;
+        _numPixels = parameters.Item2;
 
-            _cellSize = newCellSize;
-        }
+        Spawn();
     }
 }

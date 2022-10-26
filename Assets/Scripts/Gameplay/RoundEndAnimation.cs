@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class RoundEndAnimation : MonoBehaviour
 {
     [SerializeField] private Round _round;
-    [SerializeField] private GameObject _restartPanel;
+    [SerializeField] private GameObject _nextLevelPanel;
 
     private Pixel[] _pixels;
     private Color _originalCameraColor;
@@ -21,7 +21,7 @@ public class RoundEndAnimation : MonoBehaviour
     {
         Camera.main.backgroundColor = _originalCameraColor;
         _pixels = FindObjectsOfType<Pixel>();
-        _restartPanel.SetActive(false);
+        _nextLevelPanel.SetActive(false);
     }
 
     private void Play()
@@ -35,7 +35,7 @@ public class RoundEndAnimation : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
 
-        _restartPanel.SetActive(true);
+        _nextLevelPanel.SetActive(true);
     }
 
     private IEnumerator AnimatePixels()
