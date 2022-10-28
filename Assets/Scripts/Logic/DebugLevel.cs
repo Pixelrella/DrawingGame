@@ -7,8 +7,11 @@ public class DebugLevel : MonoBehaviour
     [SerializeField] private Round _round;
     [SerializeField] private ColorPicker _colorPicker;
 
-    private int _numPixels;
-    private float _cellSize;
+    private int _numPixels = 10;
+    private float _cellSize = 0.5f;
+
+    public float CellSize => _cellSize;
+    public float NumPixels => _numPixels;
 
     public void ChangeNumber(string newNumberText)
     {

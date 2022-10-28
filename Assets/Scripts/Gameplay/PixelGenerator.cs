@@ -77,19 +77,16 @@ public class PixelGenerator : MonoBehaviour
         var cellMaxPosHorizontalX = Mathf.FloorToInt(numCells.x / 2);
         var cellMaxVertical = Mathf.RoundToInt(numCells.y / 2);
 
+        // Accounting for shifts in grid placement
         var rightHorizontalShift = 1;
-        var leftHorizontalShift = numCells.x % 2 == 0 ? 0 : 1;
-        if (cellSize <= Mathf.Abs(_bounds.offset.x))
-        {
-            var shift = Mathf.FloorToInt(Mathf.Abs(_bounds.offset.x) / cellSize);
-            rightHorizontalShift += shift;
-            leftHorizontalShift += shift;
-        }
+        var leftHorizontalShift = 0;
+        var upperVerticalShift = 2;
+        var lowerVerticalShift = -1;
 
         var leftMaxPos = -cellMaxPosHorizontalX - leftHorizontalShift;
         var rightMaxPos = cellMaxPosHorizontalX - rightHorizontalShift;
-        var upMaxPos = cellMaxVertical - 1;
-        var downMaxPos = -cellMaxVertical;
+        var upMaxPos = cellMaxVertical - upperVerticalShift;
+        var downMaxPos = -cellMaxVertical - lowerVerticalShift;
 
         var gridBounds = new GridBounds(leftMaxPos, rightMaxPos, upMaxPos, downMaxPos);
         return gridBounds;

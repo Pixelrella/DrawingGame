@@ -1,11 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RoundEndAnimation : MonoBehaviour
 {
     [SerializeField] private Round _round;
-    [SerializeField] private GameObject _nextLevelPanel;
+    [SerializeField] private List<GameObject> _visibleInRound = new List<GameObject>();
+    [SerializeField] private List<GameObject> _hiddenInRound = new List<GameObject>();
 
     private Pixel[] _pixels;
     private Color _originalCameraColor;
@@ -21,21 +22,33 @@ public class RoundEndAnimation : MonoBehaviour
     {
         Camera.main.backgroundColor = _originalCameraColor;
         _pixels = FindObjectsOfType<Pixel>();
-        _nextLevelPanel.SetActive(false);
+
+        foreach (var item in _hiddenInRound)
+        {
+            item.SetActive(false);
+        }
+
+        foreach (var item in _visibleInRound)
+        {
+            item.SetActive(true);
+        }
     }
 
     private void Play()
     {
         Camera.main.backgroundColor = Random.ColorHSV();
+
+        foreach (var item in _hiddenInRound)
+        {
+            item.SetActive(true);
+        }
+
+        foreach (var item in _visibleInRound)
+        {
+            item.SetActive(false);
+        }
+
         StartCoroutine(AnimatePixels());
-        StartCoroutine(ShowRestartPanel());
-    }
-
-    private IEnumerator ShowRestartPanel()
-    {
-        yield return new WaitForSeconds(3f);
-
-        _nextLevelPanel.SetActive(true);
     }
 
     private IEnumerator AnimatePixels()

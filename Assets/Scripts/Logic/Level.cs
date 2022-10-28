@@ -10,6 +10,11 @@ public class Level : MonoBehaviour
 
     private void Start()
     {
+        Reset();
+    }
+
+    public void Reset()
+    {
         _progression = new DifficultyProgression(_pixelGenerator.GetNumberOfPixels);
         StartLevel();
     }

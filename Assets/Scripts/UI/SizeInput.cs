@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class SizeInput : MonoBehaviour
 {
-    [SerializeField] private PixelGenerator _pixelGenerator;
+    [SerializeField] private DebugLevel _debugLevel;
     [SerializeField] private TMP_InputField _text;
 
     void Awake()
     {
-        _text.text = _pixelGenerator.CellSize.ToString();
+        _text.text = _debugLevel.CellSize.ToString();
     }
 }
